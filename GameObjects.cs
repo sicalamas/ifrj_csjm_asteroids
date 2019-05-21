@@ -65,6 +65,7 @@ namespace Asteroids
             }
         }
 
+        // Métodos especiais
         public void createPlayer(float x, float y)
         {
             objectsList.Add(new Spaceship(x,y));
@@ -88,7 +89,7 @@ namespace Asteroids
             for (int i = 0; i < n; i++)
             {
                 rand = new Random(i);
-                objectsList.Add(new Asteroid(rand.Next(GameData.WIDTH), rand.Next(GameData.HEIGHT)));
+                objectsList.Add(new Asteroid(rand.Next(GameData.WIDTH), rand.Next(GameData.HEIGHT),i));
             }
         }
 

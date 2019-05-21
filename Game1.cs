@@ -12,15 +12,16 @@ namespace Asteroids
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        GameObjects gameObjects;
-        GameData gameData;
+        GameObjects gameObjects; // Listão de objetos
+        GameData gameData; // Dados úteis
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            gameObjects = new GameObjects();
-            gameObjects.createPlayersOnDrugs(20);
+            gameObjects = new GameObjects(); // Instancia listão
+            gameObjects.createPlayersOnDrugs(1); // Cria 20 naves
+            gameObjects.createAsteroids(10);
 
 
             graphics.PreferredBackBufferWidth = GameData.WIDTH;

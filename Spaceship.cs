@@ -33,7 +33,7 @@ namespace Asteroids
             //position = new Vector2(200, 200);
             velocity = new Vector2(0, 0);
             angle = MathHelper.ToRadians(0); // inicializa a nave em uma direção (traduz graus para radianos)
-            scale = 3.0f;
+            scale = GameData.GLOBAL_SCALE;
             // Inicializa atributos próprios
             isAccelerating = false;
             accelIndex = 0.1f;
