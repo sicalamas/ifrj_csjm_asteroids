@@ -1,0 +1,5 @@
+Projeto para visual 2017 ou 2019:
+Dependências Inclusas
+ - MonoGame
+ - MonoGame Extended
+ - Newtonsoft JSON
