@@ -20,9 +20,15 @@ namespace Asteroids
         float dragIndex; // Índice de desaceleração
         Color color;
 
-        public Spaceship(float x,float y)
+        GameObjects entityRef;
+
+        private double secondsPassed = 0.0;
+        private bool _allowFire = true;
+
+        public Spaceship(float x,float y, GameObjects e)
         {
             position = new Vector2(x, y);
+            entityRef = e;
         }
 
 
@@ -33,7 +39,7 @@ namespace Asteroids
             //position = new Vector2(200, 200);
             velocity = new Vector2(0, 0);
             angle = MathHelper.ToRadians(0); // inicializa a nave em uma direção (traduz graus para radianos)
-            scale = GameData.GLOBAL_SCALE;
+            scale = GameData.SCALE;
             // Inicializa atributos próprios
             isAccelerating = false;
             accelIndex = 0.1f;
@@ -56,7 +62,20 @@ namespace Asteroids
             getInput(); // Recebe e process entrada do usuário
             updatePosition(); // Altera posição
             updateDrag(); // Desacelera nave
+
+            secondsPassed += gT.ElapsedGameTime.TotalSeconds;
+            if (secondsPassed > 0.333)
+            {
+                secondsPassed -= 0.333;
+                allowFire();
+            }
+
             base.update(gT);
+        }
+
+        private void allowFire()
+        {
+            _allowFire = true;
         }
 
         public override void draw(SpriteBatch sB)
@@ -94,6 +113,13 @@ namespace Asteroids
         {
             isAccelerating = false;
 
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && _allowFire)
+            {
+                fire();
+                Console.WriteLine("Fire!");
+            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 isAccelerating = true;
@@ -107,10 +133,7 @@ namespace Asteroids
             {
                 angle += 0.033f;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                //fire();
-            }
+  
         }
 
         // accelerate() -> Acelera a nave (Bidimensional projectile motion)
@@ -134,14 +157,14 @@ namespace Asteroids
             position.X += velocity.X;
             position.Y += velocity.Y;
             // Screen Warp
-            if (position.X >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+            if (position.X >= GameData.WIDTH)
                 position.X = 0;
             else if (position.X <= 0)
-                position.X = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            else if (position.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+                position.X = GameData.WIDTH;
+            else if (position.Y >= GameData.HEIGHT)
                 position.Y = 0;
             else if (position.Y <= 0)
-                position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                position.Y = GameData.HEIGHT;
         }
 
         private void updateDrag()
@@ -150,7 +173,11 @@ namespace Asteroids
             velocity.Y *= dragIndex;
         }
 
-      
+        private void fire()
+        {
+            entityRef.createMissile(this);
+            _allowFire = false;
+        }
 
     }
 }

@@ -38,5 +38,22 @@ namespace Asteroids
         // sB -> Objeto desenhador da biblioteca ("css" do jogo)
         public virtual void draw(SpriteBatch sB) { }
 
+        public virtual void destroy() { }
+
+        public Vector2 getVelocity()
+        {
+            return this.velocity;
+        }
+
+        public Vector2 getPosition()
+        {
+            return position;
+        }
+
+        public float getAngle()
+        {
+            return angle;
+        }
+
     }
 }

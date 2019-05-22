@@ -38,6 +38,11 @@ namespace Asteroids
             }
         }
 
+        public void destroy(Entity e)
+        {
+            objectsList.Remove(e);
+        }
+
         public void unload()
         {
             // Loop para descarrega objetos de objectsList
@@ -65,10 +70,9 @@ namespace Asteroids
             }
         }
 
-        // Métodos especiais
         public void createPlayer(float x, float y)
         {
-            objectsList.Add(new Spaceship(x,y));
+            objectsList.Add(new Spaceship(x,y, this));
         }
 
         public void createPlayersOnDrugs(int n)
@@ -77,8 +81,8 @@ namespace Asteroids
             
             for (int i = 0; i < n; i++)
             {
-                    rand = new Random(i);
-                    objectsList.Add(new Spaceship(rand.Next(GameData.WIDTH), rand.Next(GameData.HEIGHT)));
+                    rand = new Random(i.GetHashCode());
+                    objectsList.Add(new Spaceship(rand.Next(GameData.WIDTH), rand.Next(GameData.HEIGHT), this));
             }
         }
 
@@ -88,11 +92,14 @@ namespace Asteroids
 
             for (int i = 0; i < n; i++)
             {
-                rand = new Random(i);
-                objectsList.Add(new Asteroid(rand.Next(GameData.WIDTH), rand.Next(GameData.HEIGHT),i));
+                rand = new Random(i.GetHashCode());
+                objectsList.Add(new Asteroid(rand.Next(GameData.WIDTH), rand.Next(GameData.HEIGHT),AsteroidTypes.Small));
             }
         }
 
-
+        internal void createMissile(Spaceship spaceship)
+        {
+            objectsList.Add(new Missile(spaceship.getPosition(), spaceship.getVelocity(), spaceship.getAngle(), this));
+        }
     }
 }

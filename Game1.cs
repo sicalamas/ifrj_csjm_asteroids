@@ -12,21 +12,24 @@ namespace Asteroids
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        GameObjects gameObjects; // Listão de objetos
-        GameData gameData; // Dados úteis
+        GameObjects gameObjects;
+        GameData gameData;
+        GameTime gameTime;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            gameObjects = new GameObjects(); // Instancia listão
-            gameObjects.createPlayersOnDrugs(1); // Cria 20 naves
+            gameObjects = new GameObjects();
+            gameObjects.createPlayersOnDrugs(1);
             gameObjects.createAsteroids(10);
+
+            gameTime = new GameTime();
 
 
             graphics.PreferredBackBufferWidth = GameData.WIDTH;
             graphics.PreferredBackBufferHeight = GameData.HEIGHT;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = GameData.FULLSCREEN;
         }
 
         /// <summary>

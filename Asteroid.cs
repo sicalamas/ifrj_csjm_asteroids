@@ -1,74 +1,54 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 
 namespace Asteroids 
 {
+    enum AsteroidTypes
+    {
+        Big,
+        Medium,
+        Small
+    }
     class Asteroid : Entity
     {
         // Atributos
-        CircleF collider; // Colisor para testes de colisão
-        //Strategy str; // Estratégia / comportamentos
-        int seed; // para gerador aleatório
+        AsteroidTypes type;
+        float radius;
+        int spriteSize;
+        Rectangle spriteRectangle;
 
-        // Construtor
-        public Asteroid(float x, float y, int s)
+
+        public Asteroid(float x, float y, AsteroidTypes t)
         {
-            position.X = x; // Configurei a posição do objeto
+            position.X = x;
             position.Y = y;
-            seed = s;
+            setVelocity();
+            type = t;
         }
 
-        public override void init()
+        private void setAsteroid()
         {
-            setVelocity(seed);
-            scale = GameData.GLOBAL_SCALE;
-            base.init();
-        }
-
-        public override void load(ContentManager cM)
-        {
-            base.load(cM);
-        }
-
-        public override void unload()
-        {
-            base.unload();
-        }
-
-        public override void update(GameTime gT)
-        {
-            updatePosition();
-            angle += 0.01f;
-            base.update(gT);
-        }
-
-        public override void draw(SpriteBatch sB)
-        {
-            // TEMPORÁRIO
-            sB.Draw(GameData.gameTexture,
-                position,
-                new Rectangle(32, 0, 32, 32),
-                Color.White,
-                angle + MathHelper.ToRadians(90),
-                new Vector2(16, 16),
-                GameData.GLOBAL_SCALE,
-                SpriteEffects.None,
-                0);
-            base.draw(sB);
-        }
-
-        private void setVelocity(int s)
-        {
-            Random rand = new Random(s); // Gerador aletório de números
-            velocity.X = (float) rand.Next(-10, 10) / 10;
-            velocity.Y = (float) rand.Next(-10, 10) / 10;
+            switch(type)
+            {
+                case AsteroidTypes.Big:
+                    spriteSize = 32;
+                    spriteRectangle = new Rectangle(32, 0, spriteSize, spriteSize);
+                    break;
+                case AsteroidTypes.Medium:
+                    spriteSize = 16;
+                    spriteRectangle = new Rectangle(48, 48, spriteSize, spriteSize);
+                    break;
+                case AsteroidTypes.Small:
+                    spriteSize = 8;
+                    spriteRectangle = new Rectangle(32, 48, spriteSize, spriteSize);
+                    break;
+            }
         }
 
         private void updatePosition()
@@ -76,14 +56,54 @@ namespace Asteroids
             position.X += velocity.X;
             position.Y += velocity.Y;
             // Screen Warp
-            if (position.X >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+            if (position.X >= GameData.WIDTH)
                 position.X = 0;
             else if (position.X <= 0)
-                position.X = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            else if (position.Y >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+                position.X = GameData.WIDTH;
+            else if (position.Y >= GameData.HEIGHT)
                 position.Y = 0;
             else if (position.Y <= 0)
-                position.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                position.Y = GameData.HEIGHT;
+        }
+
+        private void setVelocity()
+        {
+            Random rand = new Random(this.GetHashCode());
+            velocity.X = (float) rand.Next(-10,10) / 10;
+            velocity.Y = (float)rand.Next(-10, 10) / 10;
+        }
+
+        public override void init()
+        {
+            //Random rand = new Random((int)GameData.gameTime.ElapsedGameTime.TotalMilliseconds);
+            Random rand = new Random(this.GetHashCode());
+            angle = rand.Next(0, 7);
+            scale = GameData.SCALE;
+
+            setAsteroid();
+
+            base.init();
+        }
+
+        public override void update(GameTime gT)
+        {
+            angle += 0.1f * (float)gT.ElapsedGameTime.TotalSeconds;
+            updatePosition();
+            base.update(gT);
+        }
+
+        public override void draw(SpriteBatch sB)
+        {
+                sB.Draw(GameData.gameTexture,
+            position,
+            spriteRectangle,
+            Color.White,
+            angle + MathHelper.ToRadians(90),
+            new Vector2(spriteSize / 2, spriteSize / 2),
+            scale,
+            SpriteEffects.None,
+            0);
+            base.draw(sB);
         }
     }
 }
