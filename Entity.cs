@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace Asteroids
 {
-    // Entity -> Classe base para todos os objetos do jogo
+    /// <summary>
+    /// Classe base para todos os objetos do jogo
+    /// </summary>
     class Entity
     {
         // Atributos
@@ -38,8 +40,10 @@ namespace Asteroids
         // sB -> Objeto desenhador da biblioteca ("css" do jogo)
         public virtual void draw(SpriteBatch sB) { }
 
+        // Destruir o objeto (remover todas as suas referências)
         public virtual void destroy() { }
 
+        // Alguns getters úteis
         public Vector2 getVelocity()
         {
             return this.velocity;
@@ -54,6 +58,5 @@ namespace Asteroids
         {
             return angle;
         }
-
     }
 }

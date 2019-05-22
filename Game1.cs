@@ -6,97 +6,99 @@ using MonoGame.Extended;
 namespace Asteroids
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// Classe principal do jogo
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        GameObjects gameObjects;
-        GameData gameData;
-        GameTime gameTime;
+        // Atributos
+        GraphicsDeviceManager graphics; // Administrador de gráficos
+        SpriteBatch spriteBatch; // Classe "desenhadora" da framework
+        GameObjects gameObjects; // Listão de objetos (padrão observer)
+        GameData gameData; // Dados globais para o jogo
 
+        /// <summary>
+        /// Construtor
+        /// </summary>
         public Game1()
         {
+            // Instanciações da framework
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            gameObjects = new GameObjects();
-            gameObjects.createPlayersOnDrugs(1);
-            gameObjects.createAsteroids(10);
 
-            gameTime = new GameTime();
+            // Configurações para os objetos do jogo
+            gameObjects = new GameObjects(); // Instancia o listão de objetos
+            gameObjects.createPlayersOnDrugs(1); // Instancia N players
+            gameObjects.createAsteroids(10); // Instancia N asteróides
 
-
+            // Configurações da tela do jogos
             graphics.PreferredBackBufferWidth = GameData.WIDTH;
             graphics.PreferredBackBufferHeight = GameData.HEIGHT;
             graphics.IsFullScreen = GameData.FULLSCREEN;
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// Permite que o jogo execute qualquer inicialização que precise antes de começar a correr.
+        /// Aqui é onde ele pode consultar qualquer serviço necessário e carregar qualquer elemento não gráfico.
+        /// Conteúdo Relacionado. Chamando base.Initialize irá enumerar através de quaisquer componentes
+        /// e inicialize-os também.
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             gameObjects.init();
             base.Initialize();
         }
 
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// LoadContent será chamado uma vez por jogo e é o lugar para carregar
+        /// todo o seu conteúdo (arquivos externos de mídia, imagens, audio etc).
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            // Cria um novo SpriteBatch, que pode ser usado para desenhar texturas.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameObjects.load(Content);
             gameData = new GameData(Content);
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
+        /// UnloadContent será chamado uma vez por jogo e é o lugar para descarregar
+        /// conteúdo específico do jogo.
         /// </summary>
         protected override void UnloadContent()
         {
             gameObjects.unload();
-            // TODO: Unload any non ContentManager content here
         }
 
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        /// Permite que o jogo execute uma lógica como atualizar o mundo,
+        /// checando colisões, reunindo entradas e reproduzindo áudio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param name="gameTime">Dados e controle de tempo.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
-
-            // TODO: Add your update logic here
+            }
+                
             gameObjects.update(gameTime);
             base.Update(gameTime);
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// Isso é chamado quando o jogo deve se desenhar.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param name="gameTime">Dados e controle de tempo.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.Black); // Pinta o fundo de preto
 
-            GraphicsDevice.Clear(Color.Black);
-            // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, null);
-            gameObjects.draw(spriteBatch);
-            spriteBatch.DrawRectangle(new RectangleF(0, 0, GameData.WIDTH, GameData.HEIGHT), Color.White, 2.0f);
-            gameData.drawLifes(spriteBatch);
+            gameObjects.draw(spriteBatch); // Chamadas aos desenhos de todos os objetos do listão
+            spriteBatch.DrawRectangle(new RectangleF(0, 0, GameData.WIDTH, GameData.HEIGHT), Color.White, 2.0f); // Desenho do retângulo branco (bordas da tela)
+            gameData.drawLifes(spriteBatch); // Chamada ao desenho dos corações (contadores de vida)
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

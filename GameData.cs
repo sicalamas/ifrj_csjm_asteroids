@@ -9,22 +9,32 @@ using System.Threading.Tasks;
 
 namespace Asteroids
 {
+    /// <summary>
+    /// Dados úteis para o funcionamento do jogo (acessíveis globalmente)
+    /// </summary>
     class GameData
     {
-        // atributo temporário para testes
-        public static Texture2D gameTexture;
+        // Atributos
+        public static Texture2D gameTexture; // Guarda uma referência ao Sprite Sheet (único para este jogo)
+        public static readonly int WIDTH = 640; // Largura da tela
+        public static readonly int HEIGHT = 480; // Altura da tela
+        public static int LIFES = 3; // Nº de vidas do player
+        public static float SCALE = 2.0f; // Escala global dos desenhos no jogo
+        public static bool FULLSCREEN = false; // Define se tela cheia ou não
 
-        public static readonly int WIDTH = 640;
-        public static readonly int HEIGHT = 480;
-        public static int LIFES = 3;
-        public static float SCALE = 2.0f;
-        public static bool FULLSCREEN = false;
-
+        /// <summary>
+        /// Carrega o sprite sheet na memória (referência única na classe principal)
+        /// </summary>
+        /// <param name="cM">Referência a ContentManager (Classe utilitária para carregar arquivos de mídia externos)</param>
         public GameData(ContentManager cM)
         {
             gameTexture = cM.Load<Texture2D>("SpriteSheet");
         }
 
+        /// <summary>
+        /// Desenha o contador de vidas (corações no canto superior esquerdo)
+        /// </summary>
+        /// <param name="sB">Referência a SpriteBatch</param>
         public void drawLifes(SpriteBatch sB)
         {
             for( int i = 0; i < LIFES; i++)
