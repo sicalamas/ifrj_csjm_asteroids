@@ -1,2 +1,3 @@
-# ifrj_csjm_asteroids
-Learning repository for the students of IFRJ CSJM
+# LEGACY CODE
+
+Please refer to https://github.com/sicalamas/LearningMonogame_Asteroids
